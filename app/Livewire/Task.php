@@ -5,16 +5,17 @@ use App\Models\Task as ModelsTask;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Component;
-
+use Livewire\WithPagination;
 
 class Task extends Component
 {
+    use WithPagination;
+
     public $taskTitle = '';
     public $taskDescription = '';
     public $startDate = '';
     public $dueDate = '';
     public $priority = 'low';
-    public $tasks = [];
     public $showModal = false; 
 
     // تغییرات در قوانین اعتبارسنجی
@@ -25,19 +26,7 @@ class Task extends Component
         'dueDate' => 'required|date',
         'priority' => 'required|in:low,medium,high',
     ];
-
-    public function mount()
-    {
-        $this->loadTasks();
-    }
-
-    public function loadTasks()
-    {
-        // وظایف را از پایگاه داده بارگذاری می‌کند
-        $this->tasks =  ModelsTask::all();  
-    }
-
-
+ 
     /**
      * ایجاد یک تسک جدید
      *
@@ -59,9 +48,6 @@ class Task extends Component
             'user_id' => Auth::user()->id,
         ]);
 
-        // بارگذاری مجدد وظایف
-        $this->loadTasks();
-
         // بستن مدال و ریست فرم
         $this->showModal = false;
     }
@@ -78,8 +64,6 @@ class Task extends Component
         // بررسی مجوز کاربر برای به‌روزرسانی وظیفه
         Gate::authorize('update', $task);
         $task->update(['status' => true]);
-
-        $this->loadTasks();
     }
 
 
@@ -93,12 +77,15 @@ class Task extends Component
         // بررسی مجوز کاربر برای حذف وظیفه
         Gate::authorize('delete', $task);
         $task->delete();
-        $this->loadTasks();
     }
-
-
     public function render()
     {
-        return view('livewire.task');
+        return view('livewire.task', [
+            'tasks' => ModelsTask::with('user')
+            ->orderByRaw("FIELD(priority, 'high', 'medium', 'low')")  // eager loading برای بارگذاری اطلاعات کاربر
+            ->paginate(6),
+        ]);
     }
+    
+    
 }

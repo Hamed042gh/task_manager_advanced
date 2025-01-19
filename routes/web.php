@@ -20,4 +20,4 @@ Route::middleware('auth')->group(function () {
 
 require __DIR__.'/auth.php';
 
-route::get('/livewire',[HomeController::class,'index']);
+route::get('/tasks',[HomeController::class,'index'])->middleware('auth')->name('tasks');

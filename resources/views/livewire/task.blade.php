@@ -1,9 +1,9 @@
 <div class="p-6 bg-gray-100">
-    <!-- فرم ایجاد وظیفه -->
-    <h2 class="text-2xl font-bold mb-4">Add New Task</h2>
-    <button wire:click="$set('showModal', true)"
-        class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700">Add New Task</button>
-
+    <!-- فرم ایجاد وظیفه (سمت راست بالا) -->
+    <div class="flex justify-between items-center mb-4">
+        <button wire:click="$set('showModal', true)"
+            class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700">Add New Task</button>
+    </div>
     <!-- مدال ایجاد وظیفه -->
     @if ($showModal)
         <div class="fixed z-10 inset-0 overflow-y-auto">
@@ -70,24 +70,53 @@
                     <p class="text-sm text-gray-700">Description: {{ $task->description }}</p>
                     <p class="text-sm text-gray-600">Start Date: {{ $task->start_date }}</p>
                     <p class="text-sm text-gray-600">Due Date: {{ $task->due_date }}</p>
-                    <p class="text-sm text-gray-600">Priority: {{ ucfirst($task->priority) }}</p>
-                    <p class="text-sm text-gray-600">Status: {{ $task->status ? 'Completed' : 'Pending' }}</p>
+                    
+                    <!-- Priority Coloring -->
+                    <p class="text-sm text-gray-600">
+                        Priority: 
+                        @if($task->priority === 'low')
+                            <span class="px-2 py-1 text-xs text-green-800 bg-green-200 rounded-full">Low</span>
+                        @elseif($task->priority === 'medium')
+                            <span class="px-2 py-1 text-xs text-yellow-800 bg-yellow-200 rounded-full">Medium</span>
+                        @elseif($task->priority === 'high')
+                            <span class="px-2 py-1 text-xs text-red-800 bg-red-200 rounded-full">High</span>
+                        @endif
+                    </p>
+
+                   
+                    <!-- Status Coloring -->
+                    <p class="text-sm text-gray-600">
+                        Status: 
+                        @if($task->status)
+                            <span class="px-2 py-1 text-xs text-green-800 bg-green-200 rounded-full">Completed</span>
+                        @else
+                            <span class="px-2 py-1 text-xs text-gray-800 bg-gray-200 rounded-full">Pending</span>
+                        @endif
+                    </p>
                     <p class="text-sm text-gray-600">User: {{ $task->user->name }}</p>
 
-                    <div class="mt-2">
-                        @if (!$task->status)
-                            <button wire:click="markAsCompleted({{ $task->id }})"
-                                class="px-2 py-1 text-sm bg-green-500 text-white rounded hover:bg-green-600">
-                                Mark as Completed
+                    @if($task->user->role === 'admin')
+                        <div class="mt-2">
+                            @if (!$task->status)
+                                <button wire:click="markAsCompleted({{ $task->id }})"
+                                    class="px-2 py-1 text-sm bg-green-500 text-white rounded hover:bg-green-600">
+                                    Mark as Completed
+                                </button>
+                            @endif
+                            
+                            <button wire:click="deleteTask({{ $task->id }})"
+                                class="px-2 py-1 text-sm bg-red-500 text-white rounded hover:bg-red-600">
+                                Delete Task
                             </button>
-                        @endif
-                        <button wire:click="deleteTask({{ $task->id }})"
-                            class="px-2 py-1 text-sm bg-red-500 text-white rounded hover:bg-red-600">
-                            Delete Task
-                        </button>
-                    </div>
+                        </div>
+                    @endif
                 </div>
             </div>
         @endforeach
+    </div>
+
+    <!-- لینک‌های صفحه‌بندی -->
+    <div class="mt-6">
+        {{ $tasks->links() }}
     </div>
 </div>

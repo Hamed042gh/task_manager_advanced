@@ -37,7 +37,8 @@ class TaskPolicy
      */
     public function update(User $user, Task $task): bool
     {
-        return $user->id === $task->user_id;
+       // Only admins can update tasks to ensure data integrity and prevent unauthorized deletions.
+       return $user->role === 'admin';
     }
 
     /**
@@ -45,7 +46,8 @@ class TaskPolicy
      */
     public function delete(User $user, Task $task): bool
     {
-        return $user->id === $task->user_id;
+        // Only admins can delete tasks to ensure data integrity and prevent unauthorized deletions.
+        return $user->role === 'admin';
     }
 
     /**

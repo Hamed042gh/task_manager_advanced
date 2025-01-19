@@ -21,6 +21,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+   
     ];
 
     /**
@@ -31,8 +32,11 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+             
     ];
-
+    protected $guarded = [
+        'role',  // جلوگیری از تغییر role از طریق mass assignment
+    ];
     /**
      * Get the attributes that should be cast.
      *
