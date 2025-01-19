@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Livewire;
 
 use App\Models\Task as ModelsTask;
@@ -11,14 +12,14 @@ class Task extends Component
 {
     use WithPagination;
 
+    public $search = '';
     public $taskTitle = '';
     public $taskDescription = '';
     public $startDate = '';
     public $dueDate = '';
     public $priority = 'low';
-    public $showModal = false; 
+    public $showModal = false;
 
-    // تغییرات در قوانین اعتبارسنجی
     protected $rules = [
         'taskTitle' => 'required|string|max:255',
         'taskDescription' => 'required|string|max:500',
@@ -26,66 +27,109 @@ class Task extends Component
         'dueDate' => 'required|date',
         'priority' => 'required|in:low,medium,high',
     ];
- 
+
     /**
-     * ایجاد یک تسک جدید
-     *
-     * این متد یک تسک جدید ایجاد می‌کند و آن را به لیست تسک‌ها اضافه می‌کند.
+     * ذخیره یک تسک جدید در پایگاه داده
      *
      * @return void
      */
     public function createTask()
     {
-        $this->validate();  // اعتبارسنجی انجام می‌شود
+        $this->validateForm();
 
-        // ذخیره وظیفه جدید در پایگاه داده
-        ModelsTask::create([
+        ModelsTask::create($this->taskData());
+
+        $this->closeModal();
+    }
+
+    /**
+     * اعتبارسنجی فرم
+     *
+     * @return void
+     */
+    private function validateForm()
+    {
+        $this->validate();
+    }
+
+    /**
+     * داده‌های فرم را برای ذخیره تسک آماده می‌کند
+     *
+     * @return array
+     */
+    private function taskData(): array
+    {
+        return [
             'title' => $this->taskTitle,
             'description' => $this->taskDescription,
             'start_date' => $this->startDate,
             'due_date' => $this->dueDate,
             'priority' => $this->priority,
-            'user_id' => Auth::user()->id,
-        ]);
+            'user_id' => Auth::id(),
+        ];
+    }
 
-        // بستن مدال و ریست فرم
+    /**
+     * بستن مدال و ریست فرم
+     *
+     * @return void
+     */
+    private function closeModal()
+    {
         $this->showModal = false;
     }
 
-
-    // علامت‌گذاری وظیفه به عنوان تکمیل شده
-    public function markAsCompleted($taskId)
+    /**
+     * علامت‌گذاری یک تسک به عنوان تکمیل‌شده
+     *
+     * @param int $taskId
+     * @return void
+     */
+    public function markAsCompleted(int $taskId)
     {
-        $task = ModelsTask::find($taskId);
+        $task = ModelsTask::findOrFail($taskId);
 
-        if (!$task) {
-            return;
-        }
-        // بررسی مجوز کاربر برای به‌روزرسانی وظیفه
         Gate::authorize('update', $task);
+
         $task->update(['status' => true]);
     }
 
-
-    // حذف وظیفه
-    public function deleteTask($taskId)
+    /**
+     * حذف یک تسک از پایگاه داده
+     *
+     * @param int $taskId
+     * @return void
+     */
+    public function deleteTask(int $taskId)
     {
-        $task = ModelsTask::find($taskId);
-        if (!$task) {
-            return;
-        }
-        // بررسی مجوز کاربر برای حذف وظیفه
+        $task = ModelsTask::findOrFail($taskId);
+
         Gate::authorize('delete', $task);
+
         $task->delete();
     }
+
+    /**
+     * نمایش وظایف بر اساس جستجو
+     *
+     * @return \Illuminate\View\View
+     */
     public function render()
     {
+        $tasks = $this->searchTasks();
+
         return view('livewire.task', [
-            'tasks' => ModelsTask::with('user')
-            ->orderByRaw("FIELD(priority, 'high', 'medium', 'low')")  // eager loading برای بارگذاری اطلاعات کاربر
-            ->paginate(6),
+            'tasks' => $tasks,
         ]);
     }
-    
-    
+
+    /**
+     * جستجوی وظایف
+     *
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     */
+    private function searchTasks()
+    {
+        return ModelsTask::search('title', $this->search)->paginate(10);
+    }
 }

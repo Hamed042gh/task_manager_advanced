@@ -20,4 +20,13 @@ class Task extends Model
         return $this->belongsTo(User::class);
         
     }
+
+    public function scopeSearch($query, $search)
+    {
+        if ($search) {
+            return $query->where('title', 'like', '%' . $search . '%');
+        }
+        return $query;
+    }
+    
 }
