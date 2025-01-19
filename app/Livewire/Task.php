@@ -3,6 +3,7 @@ namespace App\Livewire;
 
 use App\Models\Task as ModelsTask;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Livewire\Component;
 
 
@@ -36,6 +37,14 @@ class Task extends Component
         $this->tasks =  ModelsTask::all();  
     }
 
+
+    /**
+     * ایجاد یک تسک جدید
+     *
+     * این متد یک تسک جدید ایجاد می‌کند و آن را به لیست تسک‌ها اضافه می‌کند.
+     *
+     * @return void
+     */
     public function createTask()
     {
         $this->validate();  // اعتبارسنجی انجام می‌شود
@@ -55,6 +64,36 @@ class Task extends Component
 
         // بستن مدال و ریست فرم
         $this->showModal = false;
+    }
+
+
+    // علامت‌گذاری وظیفه به عنوان تکمیل شده
+    public function markAsCompleted($taskId)
+    {
+        $task = ModelsTask::find($taskId);
+
+        if (!$task) {
+            return;
+        }
+        // بررسی مجوز کاربر برای به‌روزرسانی وظیفه
+        Gate::authorize('update', $task);
+        $task->update(['status' => true]);
+
+        $this->loadTasks();
+    }
+
+
+    // حذف وظیفه
+    public function deleteTask($taskId)
+    {
+        $task = ModelsTask::find($taskId);
+        if (!$task) {
+            return;
+        }
+        // بررسی مجوز کاربر برای حذف وظیفه
+        Gate::authorize('delete', $task);
+        $task->delete();
+        $this->loadTasks();
     }
 
 
