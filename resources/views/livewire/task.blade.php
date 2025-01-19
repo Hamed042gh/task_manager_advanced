@@ -4,6 +4,12 @@
         <button wire:click="$set('showModal', true)"
             class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700">Add New Task</button>
     </div>
+    <!-- فرم جستجو -->
+<div class="mb-4">
+    <input type="text" wire:model.lazy="search" placeholder="جستجو...">
+
+</div>
+
     <!-- مدال ایجاد وظیفه -->
     @if ($showModal)
         <div class="fixed z-10 inset-0 overflow-y-auto">
@@ -59,64 +65,68 @@
             </div>
         </div>
     @endif
-
-    <!-- لیست وظایف -->
     <h2 class="text-2xl font-bold mb-4">Task List</h2>
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        @foreach ($tasks as $task)
-            <div class="w-full p-4">
-                <div class="bg-white p-4 rounded shadow-md">
-                    <h3 class="font-semibold text-lg">{{ $task->title }}</h3>
-                    <p class="text-sm text-gray-700">Description: {{ $task->description }}</p>
-                    <p class="text-sm text-gray-600">Start Date: {{ $task->start_date }}</p>
-                    <p class="text-sm text-gray-600">Due Date: {{ $task->due_date }}</p>
-                    
-                    <!-- Priority Coloring -->
-                    <p class="text-sm text-gray-600">
-                        Priority: 
-                        @if($task->priority === 'low')
-                            <span class="px-2 py-1 text-xs text-green-800 bg-green-200 rounded-full">Low</span>
-                        @elseif($task->priority === 'medium')
-                            <span class="px-2 py-1 text-xs text-yellow-800 bg-yellow-200 rounded-full">Medium</span>
-                        @elseif($task->priority === 'high')
-                            <span class="px-2 py-1 text-xs text-red-800 bg-red-200 rounded-full">High</span>
-                        @endif
-                    </p>
 
-                   
-                    <!-- Status Coloring -->
-                    <p class="text-sm text-gray-600">
-                        Status: 
-                        @if($task->status)
-                            <span class="px-2 py-1 text-xs text-green-800 bg-green-200 rounded-full">Completed</span>
-                        @else
-                            <span class="px-2 py-1 text-xs text-gray-800 bg-gray-200 rounded-full">Pending</span>
-                        @endif
-                    </p>
-                    <p class="text-sm text-gray-600">User: {{ $task->user->name }}</p>
-
-                    @if($task->user->role === 'admin')
-                        <div class="mt-2">
-                            @if (!$task->status)
-                                <button wire:click="markAsCompleted({{ $task->id }})"
-                                    class="px-2 py-1 text-sm bg-green-500 text-white rounded hover:bg-green-600">
-                                    Mark as Completed
+    <!-- جدول وظایف -->
+    <div class="overflow-x-auto">
+        <table class="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
+            <thead class="bg-gray-100">
+                <tr>
+                    <th class="py-2 px-4 text-left text-sm font-semibold text-gray-700">Task Title</th>
+                    <th class="py-2 px-4 text-left text-sm font-semibold text-gray-700">Description</th>
+                    <th class="py-2 px-4 text-left text-sm font-semibold text-gray-700">Start Date</th>
+                    <th class="py-2 px-4 text-left text-sm font-semibold text-gray-700">Due Date</th>
+                    <th class="py-2 px-4 text-left text-sm font-semibold text-gray-700">Priority</th>
+                    <th class="py-2 px-4 text-left text-sm font-semibold text-gray-700">Status</th>
+                    <th class="py-2 px-4 text-left text-sm font-semibold text-gray-700">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($tasks as $task)
+                    <tr class="border-t border-gray-200">
+                        <td class="py-2 px-4 text-sm text-gray-700">{{ $task->title }}</td>
+                        <td class="py-2 px-4 text-sm text-gray-700">{{ $task->description }}</td>
+                        <td class="py-2 px-4 text-sm text-gray-600">{{ $task->start_date }}</td>
+                        <td class="py-2 px-4 text-sm text-gray-600">{{ $task->due_date }}</td>
+                        <td class="py-2 px-4 text-sm text-gray-600">
+                            @if($task->priority === 'low')
+                                <span class="text-xs text-green-800 bg-green-200 px-2 py-1 rounded-full">Low</span>
+                            @elseif($task->priority === 'medium')
+                                <span class="text-xs text-yellow-800 bg-yellow-200 px-2 py-1 rounded-full">Medium</span>
+                            @elseif($task->priority === 'high')
+                                <span class="text-xs text-red-800 bg-red-200 px-2 py-1 rounded-full">High</span>
+                            @endif
+                        </td>
+                        <td class="py-2 px-4 text-sm text-gray-600">
+                            @if($task->status)
+                                <span class="text-xs text-green-800 bg-green-200 px-2 py-1 rounded-full">Completed</span>
+                            @else
+                                <span class="text-xs text-gray-800 bg-gray-200 px-2 py-1 rounded-full">Pending</span>
+                            @endif
+                        </td>
+                        <td class="py-2 px-4 text-sm">
+                            @if($task->user->role === 'admin')
+                                @if (!$task->status)
+                                    <button wire:click="markAsCompleted({{ $task->id }})"
+                                        class="px-2 py-1 bg-green-500 text-white text-xs rounded hover:bg-green-600">
+                                        Mark as Completed
+                                    </button>
+                                @endif
+                                <button wire:click="deleteTask({{ $task->id }})"
+                                    class="px-2 py-1 bg-red-500 text-white text-xs rounded hover:bg-red-600 ml-2">
+                                    Delete Task
                                 </button>
                             @endif
-                            
-                            <button wire:click="deleteTask({{ $task->id }})"
-                                class="px-2 py-1 text-sm bg-red-500 text-white rounded hover:bg-red-600">
-                                Delete Task
-                            </button>
-                        </div>
-                    @endif
-                </div>
-            </div>
-        @endforeach
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
     </div>
-
-    <!-- لینک‌های صفحه‌بندی -->
+    
+    <!-- صفحه‌بندی -->
     <div class="mt-6">
         {{ $tasks->links() }}
     </div>
+
 </div>
