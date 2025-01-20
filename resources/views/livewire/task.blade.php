@@ -4,11 +4,32 @@
         <button wire:click="$set('showModal', true)"
             class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700">Add New Task</button>
     </div>
-    <!-- فرم جستجو -->
+<!-- فرم جستجو -->
 <div class="mb-4">
-    <input type="text" wire:model.lazy="search" placeholder="جستجو...">
-
+    <label for="search"></label>
+    <input type="text" id="search" wire:model.lazy="search" placeholder="Search by Title...">
 </div>
+<!-- Priority Filter -->
+<div class="mb-4">
+    <label for="priority">Search by Priority:</label>
+    <select id="priority" wire:model.lazy="priority">
+        <option value="">Priority</option>
+        <option value="low">Low</option>
+        <option value="medium">Medium</option>
+        <option value="high">High</option>
+    </select>
+</div>
+
+<!-- Status Filter -->
+<div class="mb-4">
+    <label for="status">Search by Status:</label>
+    <select id="status" wire:model.lazy="status">
+        <option value="1">Completed</option>
+        <option value="0">In Progress</option>
+    </select>
+</div>
+
+
 
     <!-- مدال ایجاد وظیفه -->
     @if ($showModal)

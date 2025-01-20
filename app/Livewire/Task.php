@@ -12,48 +12,48 @@ class Task extends Component
 {
     use WithPagination;
 
-    public $search = '';
-    public $taskTitle = '';
-    public $taskDescription = '';
-    public $startDate = '';
-    public $dueDate = '';
-    public $priority = 'low';
-    public $showModal = false;
+    public $search = '';  // Search term for filtering tasks by title
+    public $taskTitle = '';  // Task title input
+    public $taskDescription = '';  // Task description input
+    public $startDate = '';  // Task start date input
+    public $dueDate = '';  // Task due date input
+    public $priority = 'low';  // Default priority value
+    public $status = null;  // Task status filter (null means no filter)
+    public $showModal = false;  // Control showing/hiding the modal
 
+    // Validation rules for creating a new task
     protected $rules = [
         'taskTitle' => 'required|string|max:255',
         'taskDescription' => 'required|string|max:500',
         'startDate' => 'required|date',
         'dueDate' => 'required|date',
         'priority' => 'required|in:low,medium,high',
+        'status' => 'nullable|boolean',  // Optional status field for filtering tasks
     ];
 
     /**
-     * ذخیره یک تسک جدید در پایگاه داده
-     *
-     * @return void
+     * Create a new task in the database.
      */
     public function createTask()
     {
-        $this->validateForm();
+        $this->validateForm();  // Validate form input
 
+        // Save the task in the database
         ModelsTask::create($this->taskData());
 
-        $this->closeModal();
+        $this->closeModal();  // Close the modal after saving
     }
 
     /**
-     * اعتبارسنجی فرم
-     *
-     * @return void
+     * Validate the form data.
      */
     private function validateForm()
     {
-        $this->validate();
+        $this->validate();  // Perform validation based on the defined rules
     }
 
     /**
-     * داده‌های فرم را برای ذخیره تسک آماده می‌کند
+     * Prepare task data for saving in the database.
      *
      * @return array
      */
@@ -65,71 +65,84 @@ class Task extends Component
             'start_date' => $this->startDate,
             'due_date' => $this->dueDate,
             'priority' => $this->priority,
-            'user_id' => Auth::id(),
+            'user_id' => Auth::id(),  // Assign the current user as the task owner
         ];
     }
 
     /**
-     * بستن مدال و ریست فرم
-     *
-     * @return void
+     * Close the modal and reset the form.
      */
     private function closeModal()
     {
-        $this->showModal = false;
+        $this->showModal = false;  // Hide the modal
     }
 
     /**
-     * علامت‌گذاری یک تسک به عنوان تکمیل‌شده
+     * Mark a task as completed.
      *
      * @param int $taskId
-     * @return void
      */
     public function markAsCompleted(int $taskId)
     {
-        $task = ModelsTask::findOrFail($taskId);
+        $task = ModelsTask::findOrFail($taskId);  // Find the task by ID
 
-        Gate::authorize('update', $task);
+        Gate::authorize('update', $task);  // Check permission to update the task
 
-        $task->update(['status' => true]);
+        $task->update(['status' => true]);  // Update the task status to 'completed'
     }
 
     /**
-     * حذف یک تسک از پایگاه داده
+     * Delete a task from the database.
      *
      * @param int $taskId
-     * @return void
      */
     public function deleteTask(int $taskId)
     {
-        $task = ModelsTask::findOrFail($taskId);
+        $task = ModelsTask::findOrFail($taskId);  // Find the task by ID
 
-        Gate::authorize('delete', $task);
+        Gate::authorize('delete', $task);  // Check permission to delete the task
 
-        $task->delete();
+        $task->delete();  // Delete the task from the database
     }
 
     /**
-     * نمایش وظایف بر اساس جستجو
+     * Render the task list based on search filters.
      *
      * @return \Illuminate\View\View
      */
     public function render()
     {
-        $tasks = $this->searchTasks();
+        $tasks = $this->searchTasks();  // Get the filtered tasks
 
         return view('livewire.task', [
-            'tasks' => $tasks,
+            'tasks' => $tasks,  // Pass tasks to the view
         ]);
     }
 
     /**
-     * جستجوی وظایف
+     * Search tasks based on filters.
      *
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
     private function searchTasks()
     {
-        return ModelsTask::search('title', $this->search)->paginate(10);
+        $query = ModelsTask::query();  // Start a query for tasks
+
+        // Apply search filter based on task title
+        if ($this->search) {
+            $query->where('title', 'like', '%' . $this->search . '%');
+        }
+
+        // Apply priority filter
+        if ($this->priority) {
+            $query->where('priority', $this->priority);
+        }
+
+        // Apply status filter
+        if ($this->status !== null) {
+            $query->where('status', $this->status);
+        }
+
+        return $query->paginate(10);  // Return paginated tasks (10 per page)
     }
 }
