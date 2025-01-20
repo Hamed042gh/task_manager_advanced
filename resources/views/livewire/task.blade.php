@@ -1,4 +1,4 @@
-<div class="p-6 bg-gray-100">
+<div class="p-6 bg-gray-100" wire:poll>
     <!-- فرم ایجاد وظیفه (سمت راست بالا) -->
     <div class="flex justify-between items-center mb-4">
         <button wire:click="$set('showModal', true)"
@@ -126,7 +126,7 @@
                             @endif
                         </td>
                         <td class="py-2 px-4 text-sm">
-                            @if($task->user->role === 'admin')
+                            
                                 @if (!$task->status)
                                     <button wire:click="markAsCompleted({{ $task->id }})"
                                         class="px-2 py-1 bg-green-500 text-white text-xs rounded hover:bg-green-600">
@@ -137,7 +137,7 @@
                                     class="px-2 py-1 bg-red-500 text-white text-xs rounded hover:bg-red-600 ml-2">
                                     Delete Task
                                 </button>
-                            @endif
+                            
                         </td>
                     </tr>
                 @endforeach

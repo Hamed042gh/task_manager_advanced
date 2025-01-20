@@ -2,8 +2,8 @@
     @livewireStyles
 
     <!-- لینک به فایل CSS تولیدی -->
-<link rel="stylesheet" href="{{ asset('build/assets/app-Dw_2y3Tx.css  ') }}">
-<script src="{{ asset('build/assets/app-Xaw6OIO1.js') }}" defer></script>
+<link rel="stylesheet" href="{{ asset('build/assets/app-lZbSdWqR.css  ') }}">
+<script src="{{ asset('build/assets/app-Dte4iCNW.js') }}" defer></script>
 </head>
 <body>
  
