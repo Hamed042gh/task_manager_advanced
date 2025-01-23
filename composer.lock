@@ -404,16 +404,18 @@
         },
         {
             "name": "danharrin/livewire-rate-limiting",
-            "version": "v2.0.0",
+
+            "version": "v2.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/danharrin/livewire-rate-limiting.git",
-                "reference": "0d9c1890174b3d1857dba6ce76de7c178fe20283"
+                "reference": "18680be2b4d3d901d8e453560f77810145492b34"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/danharrin/livewire-rate-limiting/zipball/0d9c1890174b3d1857dba6ce76de7c178fe20283",
-                "reference": "0d9c1890174b3d1857dba6ce76de7c178fe20283",
+                "url": "https://api.github.com/repos/danharrin/livewire-rate-limiting/zipball/18680be2b4d3d901d8e453560f77810145492b34",
+                "reference": "18680be2b4d3d901d8e453560f77810145492b34",
+
                 "shasum": ""
             },
             "require": {
@@ -454,7 +456,9 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-11-24T16:57:47+00:00"
+
+            "time": "2025-01-22T14:01:35+00:00"
+
         },
         {
             "name": "dflydev/dot-access-data",
@@ -2084,16 +2088,18 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v11.39.0",
+
+            "version": "v11.39.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "996c96955f78e8a2b26a24c490a1721cfb14574f"
+                "reference": "3d693dd36e78121bcd51fc02eda4bc137d2a17f2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/996c96955f78e8a2b26a24c490a1721cfb14574f",
-                "reference": "996c96955f78e8a2b26a24c490a1721cfb14574f",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/3d693dd36e78121bcd51fc02eda4bc137d2a17f2",
+                "reference": "3d693dd36e78121bcd51fc02eda4bc137d2a17f2",
+
                 "shasum": ""
             },
             "require": {
@@ -2294,7 +2300,9 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2025-01-21T15:02:43+00:00"
+
+            "time": "2025-01-22T17:01:46+00:00"
+
         },
         {
             "name": "laravel/prompts",

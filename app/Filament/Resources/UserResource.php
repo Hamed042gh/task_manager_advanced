@@ -17,26 +17,36 @@ class UserResource extends Resource
 {
     protected static ?string $model = User::class;
 
+    protected static ?string $navigationLabel = 'Users';
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?int $navigationSort = 6;
+
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-            Forms\Components\TextInput::make('name')
-                ->label('Name')
-                ->required()
-                ->maxLength(255),
-            Forms\Components\TextInput::make('email')
-                ->label('Email')
-                ->email()
-                ->required()
-                ->maxLength(255),
-            Forms\Components\TextInput::make('password')
-                ->label('Password')
-                ->password()
-                ->required()
-                ->maxLength(255),
+                Forms\Components\TextInput::make('name')
+                    ->required()
+                    ->maxLength(255),
+                Forms\Components\TextInput::make('email')
+                    ->email()
+                    ->required()
+                    ->maxLength(255),
+                Forms\Components\DateTimePicker::make('email_verified_at'),
+                Forms\Components\TextInput::make('password')
+                    ->visibleOn('create')
+                    ->password()
+                    ->required()
+                    ->maxLength(255),
+                Forms\Components\Select::make('role')
+                    ->required()
+                    ->options([
+                        'admin' => 'Admin',
+                        'user' => 'User',
+                    ])
+                    ->default('user'),
+
             ]);
     }
 
@@ -44,11 +54,14 @@ class UserResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('id')->label('ID')->sortable(),
-                Tables\Columns\TextColumn::make('name')->label('Name')->sortable()->searchable(),
-                Tables\Columns\TextColumn::make('email')->label('Email')->sortable()->searchable(),
-                Tables\Columns\TextColumn::make('created_at')->label('Created At')->dateTime()->sortable(),
-                Tables\Columns\TextColumn::make('updated_at')->label('Updated At')->dateTime()->sortable(),
+                Tables\Columns\TextColumn::make('name')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('email')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('email_verified_at')
+                    ->dateTime()
+                    ->sortable(),
+
             ])
             ->filters([
                 //

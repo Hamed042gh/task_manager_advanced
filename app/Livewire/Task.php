@@ -86,7 +86,7 @@ class Task extends Component
     {
         $task = ModelsTask::findOrFail($taskId);  // Find the task by ID
 
-        Gate::authorize('update', $task);  // Check permission to update the task
+         Gate::authorize('update', $task);  // Check permission to update the task
 
         $task->update(['status' => true]);  // Update the task status to 'completed'
     }
@@ -100,7 +100,7 @@ class Task extends Component
     {
         $task = ModelsTask::findOrFail($taskId);  // Find the task by ID
 
-        Gate::authorize('delete', $task);  // Check permission to delete the task
+         Gate::authorize('delete', $task);  // Check permission to delete the task
 
         $task->delete();  // Delete the task from the database
     }
