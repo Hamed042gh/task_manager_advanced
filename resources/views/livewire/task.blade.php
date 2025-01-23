@@ -108,7 +108,7 @@
                         <td class="py-2 px-4 text-sm text-gray-700">{{ $task->title }}</td>
                         <td class="py-2 px-4 text-sm text-gray-700">{{ $task->description }}</td>
                         <td class="py-2 px-4 text-sm text-gray-600">{{ $task->start_date }}</td>
-                        <td class="py-2 px-4 text-sm text-gray-600">{{ $task->due_date }}</td>
+                        <td class="py-2 px-4 text-sm text-gray-600">{{ $task->days_remaining }}</td>
                         <td class="py-2 px-4 text-sm text-gray-600">
                             @if($task->priority === 'low')
                                 <span class="text-xs text-green-800 bg-green-200 px-2 py-1 rounded-full">Low</span>

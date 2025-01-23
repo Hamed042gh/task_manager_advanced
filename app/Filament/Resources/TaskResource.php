@@ -43,8 +43,12 @@ class TaskResource extends Resource
                         'high' => 'High',
                     ])
                     ->required(),
-                Forms\Components\TextInput::make('user_id')
-                    ->numeric(),
+            Forms\Components\Select::make('user_id')
+                ->label('User')
+                ->required()
+                ->relationship('user', 'name') // 'user' is the relation method, 'name' is the column displayed
+                ->searchable(),
+                
                 Forms\Components\Toggle::make('status')
                     ->required(),
             ]);
@@ -59,9 +63,13 @@ class TaskResource extends Resource
                 Tables\Columns\TextColumn::make('start_date')
                     ->date()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('due_date')
-                    ->date()
+                    Tables\Columns\TextColumn::make('due_date')
+                    ->label('Remaining Time')
+                    ->getStateUsing(function ($record) {
+                        return $record->days_remaining; // Access the 'getDaysRemainingAttribute' accessor
+                    })
                     ->sortable(),
+                
                 Tables\Columns\TextColumn::make('priority')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('user_id')

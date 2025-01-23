@@ -18,7 +18,7 @@ return new class extends Migration
             $table->date('start_date');
             $table->date('due_date');
             $table->string('priority');
-            $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('cascade');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->boolean('status')->default(false);
             $table->timestamps();
         });
