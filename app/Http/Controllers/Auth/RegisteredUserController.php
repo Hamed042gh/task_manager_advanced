@@ -4,17 +4,25 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Services\RateLimiterService;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 
 class RegisteredUserController extends Controller
 {
+    protected RateLimiterService $rateLimiter;
+
+    public function __construct(RateLimiterService $rateLimiter)
+    {
+        $this->rateLimiter = $rateLimiter;
+    }
     /**
      * Display the registration view.
      */
@@ -30,16 +38,9 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        $rateLimitKey = 'Register:' . $request->ip();
 
-           // Define a unique rate-limiting key for this IP
-           $key = 'register:' . $request->ip();
-
-           // Check if the user has exceeded the allowed attempts
-           if (RateLimiter::tooManyAttempts($key, 1)) {
-               return back()->withErrors([
-                   'error' => 'Too many registration attempts. Please try again later.',
-               ])->withInput();
-           }
+        $this->rateLimiter->CheckRateLimiter($rateLimitKey);
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
@@ -55,8 +56,10 @@ class RegisteredUserController extends Controller
         event(new Registered($user));
 
         Auth::login($user);
-        // Clear rate-limiting for this IP after successful registration
-        RateLimiter::clear($key);
+        // Store the attempt in Rate Limiter to prevent further registrations from the same IP
+        $this->rateLimiter->hitLimmit($rateLimitKey);
+
+        Log::info('User created: ', ['id' => $user->id, 'email' => $user->email, 'ip' => $request->ip()]);
 
         return redirect(route('dashboard', absolute: false));
     }
