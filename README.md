@@ -13,6 +13,7 @@ This project is a task manager application.
 - User roles and policies
 - Task completion feature
 - Livewire integration
+- 🚫 Apply Rate Limiting on Registration and Login Requests
 
 ## Installation
 
