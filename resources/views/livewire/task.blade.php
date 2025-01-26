@@ -1,9 +1,10 @@
-<div class="p-6 bg-gray-100" wire:poll>
+<div class="p-6 bg-gray-100" >
     <!-- فرم ایجاد وظیفه (سمت راست بالا) -->
     <div class="flex justify-between items-center mb-4">
         <button wire:click="$set('showModal', true)"
             class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700">Add New Task</button>
     </div>
+    
 <!-- فرم جستجو -->
 <div class="mb-4">
     <label for="search"></label>
@@ -87,7 +88,13 @@
         </div>
     @endif
     <h2 class="text-2xl font-bold mb-4">Task List</h2>
+    <div>
+        @if($tasks->isEmpty())
+            <p>No tasks found</p>
+        @else
+         
 
+    
     <!-- جدول وظایف -->
     <div class="overflow-x-auto">
         <table class="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
@@ -144,7 +151,8 @@
             </tbody>
         </table>
     </div>
-    
+    @endif
+</div>
     <!-- صفحه‌بندی -->
     <div class="mt-6">
         {{ $tasks->links() }}
