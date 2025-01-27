@@ -58,8 +58,8 @@ class TaskTest extends TestCase
         $this->assertDatabaseHas('tasks', [
             'title' => 'New Task',
             'description' => 'Description for new task',
-            'start_date' => now()->toDateString(),
-            'due_date' => now()->addDays(5)->toDateString(),
+            'start_date' => now(),
+            'due_date' => now()->addDays(5),
             'priority' => 'medium',
             'user_id' => $user->id,
         ]);
