@@ -4,9 +4,10 @@ This project is a task manager application.
 
 ## Screenshots
 
-![Task Image](https://github.com/Hamed042gh/task_manager_advanced/blob/main/public/images/1.png?raw=true)
 ![Task Image](https://github.com/Hamed042gh/task_manager_advanced/blob/main/public/images/2.png?raw=true)
+![Task Image](https://github.com/Hamed042gh/task_manager_advanced/blob/main/public/images/1.png?raw=true)
 ![Task Image](https://github.com/Hamed042gh/task_manager_advanced/blob/main/public/images/3.png?raw=true)
+![Task Image](https://github.com/Hamed042gh/task_manager_advanced/blob/main/public/images/4.png?raw=true)
 
 ## Features
 - Task CRUD functionality
@@ -14,6 +15,8 @@ This project is a task manager application.
 - User roles and policies
 - Task completion feature
 - Livewire integration
+- Task and User Filament features
+- Testing integration features
 - 🚫 Apply Rate Limiting on Registration and Login Requests
 
 ## Installation
