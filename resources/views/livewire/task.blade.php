@@ -1,4 +1,13 @@
 <div class="p-6 bg-gray-100" wire:poll >
+    <div class="text-center bg-white shadow rounded-lg p-4 mb-6">
+        <h2 class="text-2xl font-bold text-gray-700 mb-2">Task Management System</h2>
+        <p class="text-gray-600">
+            Welcome to the Task Management System. Here, you can create, manage, and track tasks effectively. 
+            Use the search and filter options to find tasks by title, priority, or status. Admin users can update 
+            or delete tasks as necessary.
+        </p>
+    </div>
+    
     <!-- فرم ایجاد وظیفه (سمت راست بالا) -->
     <div class="flex justify-between items-center mb-4">
         <button wire:click="$set('showModal', true)"
