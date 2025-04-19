@@ -3,7 +3,7 @@
 This project is a task manager application.
 
 ## Screenshots
-ggdd
+ggddgg
 ![Task Image](https://github.com/Hamed042gh/task_manager_advanced/blob/main/public/images/2.png?raw=true)
 ![Task Image](https://github.com/Hamed042gh/task_manager_advanced/blob/main/public/images/1.png?raw=true)
 ![Task Image](https://github.com/Hamed042gh/task_manager_advanced/blob/main/public/images/3.png?raw=true)
