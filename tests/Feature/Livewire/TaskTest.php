@@ -41,29 +41,32 @@ class TaskTest extends TestCase
     }
 
     // Test to create a new task and verify it in the database
-    public function test_create_task()
-    {
-        $user = User::factory()->create();
+public function test_create_task()
+{
+    $user = User::factory()->create();
+    $this->actingAs($user);
 
-        $this->actingAs($user);
+    $startDate = now();
+    $dueDate = now()->addDays(5);
 
-        Livewire::test(Task::class)
-            ->set('taskTitle', 'New Task')
-            ->set('taskDescription', 'Description for new task')
-            ->set('startDate', now())
-            ->set('dueDate', now()->addDays(5))
-            ->set('priority', 'medium')
-            ->call('createTask');
+    Livewire::test(Task::class)
+        ->set('taskTitle', 'New Task')
+        ->set('taskDescription', 'Description for new task')
+        ->set('startDate', $startDate)
+        ->set('dueDate', $dueDate)
+        ->set('priority', 'medium')
+        ->call('createTask');
 
-        $this->assertDatabaseHas('tasks', [
-            'title' => 'New Task',
-            'description' => 'Description for new task',
-            'start_date' => now(),
-            'due_date' => now()->addDays(5),
-            'priority' => 'medium',
-            'user_id' => $user->id,
-        ]);
-    }
+    $this->assertDatabaseHas('tasks', [
+        'title' => 'New Task',
+        'description' => 'Description for new task',
+        'start_date' => $startDate->toDateString(),
+        'due_date' => $dueDate->toDateString(),
+        'priority' => 'medium',
+        'user_id' => $user->id,
+    ]);
+}
+
 
     // Test to verify a regular user cannot mark a task as completed
     public function test_mark_as_completed_for_regular_user()

@@ -2,8 +2,8 @@
     @livewireStyles
 
     <!-- لینک به فایل CSS تولیدی -->
-<link rel="stylesheet" href="{{ asset('build/assets/app-JL_Bulk9.css ') }}">
-<script src="{{ asset('build/assets/app-Dte4iCNW.js') }}" defer></script>
+<link rel="stylesheet" href="{{ asset('build/assets/app-BVNHUl9R.css ') }}">
+<script src="{{ asset('build/assets/app-C_9rHI7Y.js') }}" defer></script>
 </head>
 <body>
     @auth
@@ -13,8 +13,8 @@
         </h1>
     @endif
 @endauth
-   
+
     @livewire('task')
     @livewireScripts
-    
+
 </body>
